@@ -289,6 +289,20 @@ doirasidan tashqarida.
 
 ## 9. Muammolarni bartaraf etish
 
+- **`failed to bind host port ... address already in use`** — serverda shu
+  port allaqachon band (ko'pincha hosting panel - aaPanel/cPanel va h.k. -
+  o'z MySQL/veb-xizmatini standart portlarda ishlatadi). `.env` faylida mos
+  o'zgaruvchini band bo'lmagan portga almashtiring:
+  `MYSQL_HOST_PORT`, `BNET_LOGIN_PORT`, `BNET_REST_PORT`, `WORLD_HOST_PORT`,
+  `WEB_HOST_PORT` (namunalar `.env.example` da). Qaysi port band ekanini
+  ko'rish uchun: `ss -tulpn | grep <port>`. O'zgartirgach:
+  ```bash
+  docker compose down
+  docker compose up -d --force-recreate mysql bnetserver web
+  ```
+  (`--force-recreate` muhim — aks holda Docker ba'zan eski, allaqachon
+  yaratilgan konteynerni yangi port bilan qayta yaratmasdan, eskisini
+  ishga tushirishga urinishi mumkin.)
 - **Build juda uzoq/xotira yetmayapti** — `.env` dagi `BUILD_JOBS` qiymatini
   kamaytiring (masalan `2`).
 - **Build paytida `TrinityCore needs OpenSSL version 1.0 ... but found too new
