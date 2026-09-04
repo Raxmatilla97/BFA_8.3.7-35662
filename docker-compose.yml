@@ -11,7 +11,13 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
     ports:
-      - "3306:3306"
+      # Tashqi (host) portni sozlash mumkin - agar serverda allaqachon boshqa
+      # MySQL ishlab tursa (masalan hosting panel o'zi o'rnatgan), .env da
+      # MYSQL_HOST_PORT ni bo'sh portga o'zgartiring. Bu FAQAT hostdan
+      # to'g'ridan-to'g'ri ulanish (masalan mysql client/phpMyAdmin) uchun -
+      # bnetserver/worldserver/web konteynerlari ichki tarmoq orqali
+      # (mysql:3306 nomi bilan) ulanadi, bunga bog'liq emas.
+      - "${MYSQL_HOST_PORT:-3306}:3306"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${DB_PASSWORD:-trinity}"]
       interval: 5s
