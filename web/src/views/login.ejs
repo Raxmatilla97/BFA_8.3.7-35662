@@ -1,0 +1,30 @@
+<%- include('partials/head') %>
+<%- include('partials/navbar') %>
+
+  <main>
+    <section class="container auth-section">
+      <div class="auth-card">
+        <h1>Kirish</h1>
+        <p class="muted">Akkauntingizga kiring.</p>
+
+        <% if (error) { %>
+          <div class="alert alert-error"><%= error %></div>
+        <% } %>
+
+        <form method="post" action="/login" class="form">
+          <label for="email">Email yoki login</label>
+          <input type="text" id="email" name="email" required
+                 value="<%= old.email || '' %>" placeholder="siz@misol.com" />
+
+          <label for="password">Parol</label>
+          <input type="password" id="password" name="password" required />
+
+          <button type="submit" class="btn btn-primary btn-block">Kirish</button>
+        </form>
+
+        <p class="muted small">Akkauntingiz yo'qmi? <a href="/register">Ro'yxatdan o'ting</a>.</p>
+      </div>
+    </section>
+  </main>
+
+<%- include('partials/footer') %>

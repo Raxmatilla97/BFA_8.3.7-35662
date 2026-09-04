@@ -1,0 +1,67 @@
+<%- include('partials/head') %>
+<%- include('partials/navbar') %>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <h1>BFA UZBEK COMUNITY <em>BETTA</em></h1>
+        <p class="subtitle">O'zbek tilidagi Battle for Azeroth (8.3.7) fan-server jamoasiga xush kelibsiz!</p>
+        <p class="lead">
+          Bu yerda siz akkaunt yaratib, o'z profilingizni boshqarib, real vaqtda serverga
+          ulanish uchun ma'lumotlarni olishingiz mumkin. Loyiha hozircha
+          <strong>BETTA (beta)</strong> bosqichida &mdash; ba'zi funksiyalar hali sozlanmoqda.
+        </p>
+        <div class="cta-row">
+          <% if (currentUser) { %>
+            <a class="btn btn-primary" href="/profile">Profilimga o'tish</a>
+          <% } else { %>
+            <a class="btn btn-primary" href="/register">Ro'yxatdan o'tish</a>
+            <a class="btn btn-ghost" href="/login">Kirish</a>
+          <% } %>
+        </div>
+      </div>
+    </section>
+
+    <section class="container info-grid">
+      <div class="card">
+        <h3>Bitta akkaunt</h3>
+        <p>Ro'yxatdan o'tganingizda email/parolingiz bilan bevosita o'yin mijozidan (WoW klient)
+          ham foydalanish uchun mos akkaunt yaratiladi.</p>
+      </div>
+      <div class="card">
+        <h3>Profil va belgilar</h3>
+        <p>Profil sahifangizda o'yin akkauntingiz va serverdagi belgilaringiz (xarakterlaringiz)
+          ro'yxatini ko'rasiz.</p>
+      </div>
+      <div class="card">
+        <h3>O'zbek tilida</h3>
+        <p>Butun sayt interfeysi o'zbek tilida &mdash; jamoamiz uchun qulay va tushunarli qilib
+          tayyorlandi.</p>
+      </div>
+    </section>
+
+    <section class="container realms">
+      <h2>Realmlar</h2>
+      <% if (realms.length === 0) { %>
+        <p class="muted">Hozircha hech qanday realm sozlanmagan. Administrator tez orada
+          realmlist jadvaliga serverni qo'shadi.</p>
+      <% } else { %>
+        <table class="table">
+          <thead>
+            <tr><th>Nomi</th><th>Manzil</th><th>Port</th></tr>
+          </thead>
+          <tbody>
+            <% realms.forEach(function(r) { %>
+              <tr>
+                <td><%= r.name %></td>
+                <td><%= r.address %></td>
+                <td><%= r.port %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      <% } %>
+    </section>
+  </main>
+
+<%- include('partials/footer') %>

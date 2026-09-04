@@ -1,0 +1,18 @@
+.git
+.github
+.circleci
+build*/
+cmake-build-*/
+.vs
+.vscode
+.idea
+
+web/node_modules
+web/npm-debug.log
+
+# Mijozdan ajratib olinadigan katta hajmli xarita fayllari - build context ga kerak emas
+server-data/dbc/*
+server-data/maps/*
+server-data/vmaps/*
+server-data/mmaps/*
+!server-data/*/.gitkeep

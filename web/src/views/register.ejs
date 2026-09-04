@@ -1,0 +1,38 @@
+<%- include('partials/head') %>
+<%- include('partials/navbar') %>
+
+  <main>
+    <section class="container auth-section">
+      <div class="auth-card">
+        <h1>Ro'yxatdan o'tish</h1>
+        <p class="muted">BFA UZBEK COMUNITY BETTA jamoasiga qo'shiling.</p>
+
+        <% if (error) { %>
+          <div class="alert alert-error"><%= error %></div>
+        <% } %>
+
+        <form method="post" action="/register" class="form">
+          <label for="nickname">Taxallus (nickname)</label>
+          <input type="text" id="nickname" name="nickname" maxlength="32" required
+                 value="<%= old.nickname || '' %>" placeholder="Masalan: Alisher_UZ" />
+
+          <label for="email">Elektron pochta</label>
+          <input type="email" id="email" name="email" maxlength="320" required
+                 value="<%= old.email || '' %>" placeholder="siz@misol.com" />
+
+          <label for="password">Parol</label>
+          <input type="password" id="password" name="password" maxlength="16" required />
+          <p class="hint">Parol 1&ndash;16 belgidan iborat bo'lishi kerak (o'yin mijozi cheklovi).</p>
+
+          <label for="password2">Parolni tasdiqlang</label>
+          <input type="password" id="password2" name="password2" maxlength="16" required />
+
+          <button type="submit" class="btn btn-primary btn-block">Ro'yxatdan o'tish</button>
+        </form>
+
+        <p class="muted small">Akkauntingiz bormi? <a href="/login">Bu yerdan kiring</a>.</p>
+      </div>
+    </section>
+  </main>
+
+<%- include('partials/footer') %>

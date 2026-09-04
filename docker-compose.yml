@@ -1,0 +1,128 @@
+name: bfa-uzbek-comunity
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: bfa-mysql
+    restart: unless-stopped
+    command: --max_allowed_packet=1G --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-trinity}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${DB_PASSWORD:-trinity}"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  # Battle.net turdagi login server (email/parol bilan kirish, REST + 1119 port)
+  bnetserver:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: bnetserver
+      args:
+        JOBS: ${BUILD_JOBS:-4}
+    container_name: bfa-bnetserver
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: ${DB_PASSWORD:-trinity}
+      AUTH_DB_NAME: auth
+      BNET_EXTERNAL_ADDRESS: ${SERVER_EXTERNAL_ADDRESS:-127.0.0.1}
+      BNET_LOCAL_ADDRESS: ${SERVER_LOCAL_ADDRESS:-127.0.0.1}
+    ports:
+      - "1119:1119"
+      - "8081:8081"
+    volumes:
+      - bnetserver-etc:/opt/trinitycore/etc
+
+  # O'yin dunyosi serveri - haritalar, NPC, janglar va h.k.
+  # DIQQAT: to'liq ishlashi uchun ./server-data ichiga mijoz fayllaridan
+  # ajratilgan dbc/maps/vmaps/mmaps va to'liq "world" bazasi (TDB) kerak.
+  # Batafsil: DOCKER_UZ.md
+  worldserver:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: worldserver
+      args:
+        JOBS: ${BUILD_JOBS:-4}
+    container_name: bfa-worldserver
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      bnetserver:
+        condition: service_started
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: ${DB_PASSWORD:-trinity}
+      AUTH_DB_NAME: auth
+      WORLD_DB_NAME: world
+      CHAR_DB_NAME: characters
+      HOTFIX_DB_NAME: hotfixes
+      WORLD_DATA_DIR: /data
+    ports:
+      - "8085:8085"
+    volumes:
+      - worldserver-etc:/opt/trinitycore/etc
+      - ./server-data:/data
+
+  # BFA UZBEK COMUNITY BETTA - ro'yxatdan o'tish / kirish / profil sayti
+  web:
+    build:
+      context: ./web
+    container_name: bfa-web
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: ${DB_PASSWORD:-trinity}
+      AUTH_DB_NAME: auth
+      CHAR_DB_NAME: characters
+      SESSION_SECRET: ${SESSION_SECRET:-bfa-uzbek-comunity-betta-maxfiy-kalit}
+      SITE_NAME: "BFA UZBEK COMUNITY BETTA"
+      WEB_PORT: 3000
+      # Har safar ishga tushganda shu login/parol bilan ADMIN akkaunt avtomatik
+      # yaratiladi (yoki mavjud bo'lsa parol/huquqlari shu qiymatlarga moslanadi).
+      # Haqiqiy qiymatlarni faqat .env faylida bering (Git-ga qo'shilmaydi)!
+      ADMIN_LOGIN: ${ADMIN_LOGIN:-}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+    ports:
+      - "8086:3000"
+
+  # Mijoz fayllaridan xarita ma'lumotlarini ajratib olish uchun asboblar.
+  # Odatiy holatda ishga tushmaydi (faqat "tools" profili orqali chaqiriladi):
+  #   docker compose build tools
+  #   docker compose run --rm -v "/path/to/WoW/client:/client" -w /client tools
+  tools:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: tools
+      args:
+        JOBS: ${BUILD_JOBS:-4}
+    container_name: bfa-tools
+    profiles: ["tools"]
+    volumes:
+      - ./server-data:/data
+
+volumes:
+  mysql-data:
+  bnetserver-etc:
+  worldserver-etc:

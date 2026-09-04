@@ -1,0 +1,21 @@
+{
+  "name": "bfa-uzbek-community-web",
+  "version": "1.0.0",
+  "description": "BFA UZBEK COMUNITY BETTA - TrinityCore (BfA 8.3.7) uchun ro'yxatdan o'tish / kirish / profil sayti",
+  "private": true,
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "mysql2": "^3.10.1"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

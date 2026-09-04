@@ -29,3 +29,7 @@
 
 # Ignore sql/* files
 sql/*    linguist-documentation
+
+# Docker konteynerlari ichida ishlaydigan shell skriptlar - CRLF bilan
+# saqlansa, Linux konteynerda ishga tushmay qoladi (bad interpreter xatosi).
+*.sh     text eol=lf

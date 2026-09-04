@@ -1,0 +1,87 @@
+<%- include('partials/head') %>
+<%- include('partials/navbar') %>
+
+  <main>
+    <section class="container admin-section">
+      <h1>Admin panel</h1>
+      <p class="muted">Ro'yxatdan o'tgan akkauntlar, realmlar va umumiy statistika.</p>
+
+      <div class="info-grid" style="margin: 20px 0 30px;">
+        <div class="card">
+          <h3>Akkauntlar</h3>
+          <p style="font-size:1.8rem; margin:0;"><%= accounts.length %></p>
+        </div>
+        <div class="card">
+          <h3>Realmlar</h3>
+          <p style="font-size:1.8rem; margin:0;"><%= realms.length %></p>
+        </div>
+        <div class="card">
+          <h3>Belgilar (xarakterlar)</h3>
+          <p style="font-size:1.8rem; margin:0;"><%= characterCount === null ? '—' : characterCount %></p>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom: 24px;">
+        <h2>Akkauntlar ro'yxati</h2>
+        <div style="overflow-x:auto;">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>ID</th><th>Email/login</th><th>Taxallus</th><th>Rol</th>
+                <th>Ro'yxatdan o'tgan</th><th>Oxirgi kirish</th><th>Holati</th><th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% accounts.forEach(function(a) { %>
+                <tr>
+                  <td>#<%= a.id %></td>
+                  <td><%= a.email %></td>
+                  <td><%= a.nickname || '—' %></td>
+                  <td><%= a.role === 'admin' ? 'Admin' : 'Foydalanuvchi' %></td>
+                  <td><%= new Date(a.joindate).toISOString().slice(0, 10) %></td>
+                  <td><%= a.last_login ? new Date(a.last_login).toISOString().slice(0, 10) : '—' %></td>
+                  <td><%= a.locked ? 'Bloklangan' : 'Faol' %></td>
+                  <td style="white-space:nowrap;">
+                    <form method="post" action="/admin/accounts/<%= a.id %>/toggle-lock" class="inline-form">
+                      <button type="submit" class="link-button">
+                        <%= a.locked ? 'Blokdan chiqarish' : 'Bloklash' %>
+                      </button>
+                    </form>
+                    &middot;
+                    <form method="post" action="/admin/accounts/<%= a.id %>/toggle-role" class="inline-form">
+                      <button type="submit" class="link-button">
+                        <%= a.role === 'admin' ? 'Adminlikdan olish' : 'Admin qilish' %>
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Realmlar</h2>
+        <% if (realms.length === 0) { %>
+          <p class="muted">Hozircha realm sozlanmagan.</p>
+        <% } else { %>
+          <table class="table">
+            <thead><tr><th>Nomi</th><th>Manzil</th><th>Port</th><th>Build</th></tr></thead>
+            <tbody>
+              <% realms.forEach(function(r) { %>
+                <tr>
+                  <td><%= r.name %></td>
+                  <td><%= r.address %></td>
+                  <td><%= r.port %></td>
+                  <td><%= r.gamebuild %></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        <% } %>
+      </div>
+    </section>
+  </main>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,64 @@
+<%- include('partials/head') %>
+<%- include('partials/navbar') %>
+
+  <main>
+    <section class="container profile-section">
+      <div class="profile-header card">
+        <div class="avatar"><%= (profile.nickname || '?').charAt(0).toUpperCase() %></div>
+        <div>
+          <h1><%= profile.nickname %> <% if (currentUser && currentUser.role === 'admin') { %><span class="badge-admin">ADMIN</span><% } %></h1>
+          <p class="muted"><%= bnetAccount.email %></p>
+          <p class="muted small">
+            Ro'yxatdan o'tgan sana:
+            <%= new Date(bnetAccount.joindate).toISOString().slice(0, 10) %>
+          </p>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h2>O'yin akkauntlari</h2>
+          <% if (gameAccounts.length === 0) { %>
+            <p class="muted">O'yin akkaunti topilmadi.</p>
+          <% } else { %>
+            <table class="table">
+              <thead><tr><th>Nomi</th><th>Kengaytma</th><th>Holati</th></tr></thead>
+              <tbody>
+                <% gameAccounts.forEach(function(a) { %>
+                  <tr>
+                    <td><%= a.username %></td>
+                    <td><%= a.expansion %></td>
+                    <td><%= a.online ? 'Onlayn' : 'Oflayn' %></td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          <% } %>
+        </div>
+
+        <div class="card">
+          <h2>Belgilar (xarakterlar)</h2>
+          <% if (characters.length === 0) { %>
+            <p class="muted">Hozircha belgilar yo'q. O'yinga kirib, yangi belgi yarating!</p>
+          <% } else { %>
+            <table class="table">
+              <thead><tr><th>Ism</th><th>Daraja</th><th>Irqi</th><th>Klassi</th><th>Holati</th></tr></thead>
+              <tbody>
+                <% characters.forEach(function(c) { %>
+                  <tr>
+                    <td><%= c.name %></td>
+                    <td><%= c.level %></td>
+                    <td><%= c.raceName %></td>
+                    <td><%= c.className %></td>
+                    <td><%= c.online ? 'Onlayn' : 'Oflayn' %></td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          <% } %>
+        </div>
+      </div>
+    </section>
+  </main>
+
+<%- include('partials/footer') %>

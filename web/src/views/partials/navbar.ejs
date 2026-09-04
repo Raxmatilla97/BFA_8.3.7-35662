@@ -1,0 +1,23 @@
+  <header class="navbar">
+    <div class="container navbar-inner">
+      <a class="brand" href="/">
+        <span class="brand-badge">BFA</span>
+        <span class="brand-text">UZBEK COMUNITY <em>BETTA</em></span>
+      </a>
+      <nav class="nav-links">
+        <a href="/">Bosh sahifa</a>
+        <% if (currentUser) { %>
+          <a href="/profile">Profil</a>
+          <% if (currentUser.role === 'admin') { %>
+            <a href="/admin">Admin panel</a>
+          <% } %>
+          <form action="/logout" method="post" class="inline-form">
+            <button type="submit" class="link-button">Chiqish</button>
+          </form>
+        <% } else { %>
+          <a href="/login">Kirish</a>
+          <a href="/register" class="btn-nav">Ro'yxatdan o'tish</a>
+        <% } %>
+      </nav>
+    </div>
+  </header>
