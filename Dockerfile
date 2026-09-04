@@ -14,7 +14,11 @@
 # ESLATMA: To'liq build juda ko'p vaqt (odatda 30-90+ daqiqa, kompyuter
 # tezligiga qarab) va xotira (kamida 4-8 GB tavsiya etiladi) talab qiladi.
 
-FROM ubuntu:22.04 AS builder
+# DIQQAT: aynan Ubuntu 20.04 (OpenSSL 1.1.1) ishlatiladi - TrinityCore-ning
+# ushbu versiyasi (cmake/macros/FindOpenSSL.cmake) OpenSSL 3.x ni QO'LLAMAYDI
+# (build FATAL_ERROR bilan to'xtaydi). 22.04/24.04 kabi yangiroq Ubuntu'lar
+# standart OpenSSL 3.0 bilan keladi - shuning uchun ishlatilmaydi.
+FROM ubuntu:20.04 AS builder
 
 ENV DEBIAN_FRONTEND=noninteractive
 ARG JOBS=4
@@ -51,14 +55,16 @@ RUN mkdir -p build && cd build && \
     && make install
 
 # ---------------------------------------------------------------------------
-FROM ubuntu:22.04 AS runtime-base
+# runtime ham xuddi shu Ubuntu 20.04 (OpenSSL 1.1.1) bo'lishi shart - builder'da
+# OpenSSL 1.1 bilan bog'langan (linked) binary'lar 3.0 bilan mos kelmaydi.
+FROM ubuntu:20.04 AS runtime-base
 
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
       libmariadb3 \
       default-mysql-client \
-      libssl3 \
+      libssl1.1 \
       libbz2-1.0 \
       libreadline8 \
       libncurses6 \

@@ -291,6 +291,13 @@ doirasidan tashqarida.
 
 - **Build juda uzoq/xotira yetmayapti** — `.env` dagi `BUILD_JOBS` qiymatini
   kamaytiring (masalan `2`).
+- **Build paytida `TrinityCore needs OpenSSL version 1.0 ... but found too new
+  version 3.0.x` xatosi** — bu ushbu core versiyasining o'zi OpenSSL 3.x ni
+  qo'llab-quvvatlamasligidan (buni Ubuntu 22.04+ standart bilan o'rnatadi).
+  `Dockerfile` ataylab **Ubuntu 20.04** (OpenSSL 1.1.1) asosida qurilgan -
+  agar shu xatoni ko'rsangiz, `git pull` bilan eng so'nggi `Dockerfile`ni
+  olganingizga va Docker eskirgan keshdan emas, qaytadan (`--build` bilan)
+  qurilayotganiga ishonch hosil qiling.
 - **bnetserver/worldserver qayta-qayta o'chib-yonyapti** — loglarni ko'ring:
   `docker compose logs --tail=100 bnetserver`. Ko'pincha bazaga ulanish
   yoki (worldserver uchun) `server-data/` bo'sh bo'lgani sabab bo'ladi.
