@@ -62,6 +62,7 @@ FROM ubuntu:20.04 AS runtime-base
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
+      libmysqlclient21 \
       libmariadb3 \
       default-mysql-client \
       libssl1.1 \
