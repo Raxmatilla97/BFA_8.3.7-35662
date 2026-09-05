@@ -11,13 +11,11 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
     ports:
-      # Tashqi (host) portni sozlash mumkin - agar serverda allaqachon boshqa
-      # MySQL ishlab tursa (masalan hosting panel o'zi o'rnatgan), .env da
-      # MYSQL_HOST_PORT ni bo'sh portga o'zgartiring. Bu FAQAT hostdan
+      # Tashqi (host) port qat'iy 3307 ga bog'langan. Bu FAQAT hostdan
       # to'g'ridan-to'g'ri ulanish (masalan mysql client/phpMyAdmin) uchun -
       # bnetserver/worldserver/web konteynerlari ichki tarmoq orqali
       # (mysql:3306 nomi bilan) ulanadi, bunga bog'liq emas.
-      - "${MYSQL_HOST_PORT:-3306}:3306"
+      - "3307:3306"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${DB_PASSWORD:-trinity}"]
       interval: 5s
@@ -46,8 +44,8 @@ services:
       BNET_EXTERNAL_ADDRESS: ${SERVER_EXTERNAL_ADDRESS:-127.0.0.1}
       BNET_LOCAL_ADDRESS: ${SERVER_LOCAL_ADDRESS:-127.0.0.1}
     ports:
-      - "${BNET_LOGIN_PORT:-1119}:1119"
-      - "${BNET_REST_PORT:-8081}:8081"
+      - "1119:1119"
+      - "8081:8081"
     volumes:
       - bnetserver-etc:/opt/trinitycore/etc
 
@@ -80,7 +78,7 @@ services:
       HOTFIX_DB_NAME: hotfixes
       WORLD_DATA_DIR: /data
     ports:
-      - "${WORLD_HOST_PORT:-8085}:8085"
+      - "8085:8085"
     volumes:
       - worldserver-etc:/opt/trinitycore/etc
       - ./server-data:/data
@@ -110,7 +108,7 @@ services:
       ADMIN_LOGIN: ${ADMIN_LOGIN:-}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
     ports:
-      - "${WEB_HOST_PORT:-8086}:3000"
+      - "8098:3000"
 
   # Mijoz fayllaridan xarita ma'lumotlarini ajratib olish uchun asboblar.
   # Odatiy holatda ishga tushmaydi (faqat "tools" profili orqali chaqiriladi):
